@@ -1,4 +1,6 @@
-# EazyBot-jiangnan（mac x64 1.0.7 定制版）
+# EazyBot-jiangnan（Intel x64 专仓）
+
+> 本仓库只发布 **Intel (x64)** 版本的源码与 Release；Apple Silicon 版在 [eazybot-jiangnan](https://github.com/j353719624/eazybot-jiangnan)。
 
 基于官方 EazyBot 1.0.7 桌面包的 fork。本仓库保存**全部定制源码与构建脚本**，
 不包含第三方运行时（env/）与官方 console 全量产物。
