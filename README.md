@@ -15,18 +15,27 @@
 | `overlay/.../console/assets/index-BiWh193y.js` | 三按钮补丁：欢迎页/聊天页顶栏恒用 `variant:"full"`（申请续费/升级套餐、配置岗底斯密钥、下载终端申请openAPI） |
 | `seed/eazybot-data/` | 首启播种数据：30 技能 + 6 智能体工作区 + gangtise-mcp（金融分析助手，`$GTS_*` 引用写法，配齐密钥后自动启用）。**不含任何凭据**（.secret/会话/日志均排除） |
 
-## 从基础包构建 DMG
-
-前提：一份已组装好 env 的官方 1.0.7 mac x64 基础包
-（agentscope 1.0.19.post1 + reme_ai 0.3.1.8 + agentscope_runtime 1.1.4，
-venv python 已改名为 `env/bin/EazyBot-jiangnan`）。
+## 从基础包构建 DMG（双架构）
 
 ```bash
 chmod +x scripts/build-dmg.sh
-./scripts/build-dmg.sh /path/to/基础包/EazyBot-jiangnan.app ./dist
+
+# Intel（基础包：官方 1.0.7 mac x64，env 已组装、venv python 已改名 EazyBot-jiangnan）
+./scripts/build-dmg.sh x64   /path/to/官方x64基础包/EazyBot-jiangnan.app ./dist
+
+# Apple Silicon（基础包：官方 1.0.7 mac arm64；脚本自动换牌 + 换算 python 副本 +
+# 交叉编译 arm64 启动器并 adhoc 签名；icns 取自本机已装的 x64 定制版，可用
+# EAZYBOT_X64_APP 环境变量指向其它来源）
+./scripts/build-dmg.sh arm64 /path/to/官方arm64基础包/EazyBot.app ./dist
 ```
 
-脚本会依次：应用 overlay → 编译启动器 → 清 console 预压缩缓存 → 放入种子 → 打 DMG。
+脚本流程：复制基础包 → 应用 overlay → 架构相关处理（启动器编译/换牌/python 副本）
+→ 清 console 预压缩缓存 → 放入种子 → 打 DMG。
+
+> 运行时（python 解释器与 C 扩展 .so）是机器码，无法在本机跨架构编译；
+> arm64 版取官方 arm64 基础包的运行时（版本与 x64 完全一致：后端 2.2.18、
+> agentscope 1.0.19.post1、reme_ai 0.3.1.8、agentscope_runtime 1.1.4），
+> 其余内容（后端补丁/console/种子/品牌/配置）全部来自本仓库 overlay 与 seed。
 
 ## 关键机制备忘
 
